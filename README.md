@@ -108,19 +108,14 @@ El programa realiza los siguientes pasos:
 ## Tecnologías utilizadas
 
 * Python
-* NumPy
-* Pandas
-* Scikit-learn
-* Matplotlib
+* Biblioteca estándar de Python para la demo inicial
+* Matplotlib para la etapa de gráficos
+* NumPy, Pandas y Scikit-learn como posibles apoyos para una versión más avanzada
 
 ## Bibliotecas principales
 
-```python
-numpy
-pandas
-scikit-learn
-matplotlib
-```
+La demo actual no requiere instalar dependencias externas. El archivo
+`requirements.txt` queda preparado para las mejoras de visualización y análisis.
 
 ## Instalación
 
@@ -142,21 +137,70 @@ Activar el entorno virtual en Linux o macOS:
 source venv/bin/activate
 ```
 
-Luego instalar las dependencias:
+Luego, si se trabajará en gráficos o análisis avanzado, instalar las dependencias:
 
 ```bash
-pip install numpy pandas scikit-learn matplotlib
+pip install -r requirements.txt
 ```
 
 ## Ejecución del programa
 
-Para ejecutar el buscador:
+Para ejecutar la demo completa por consola:
 
 ```bash
-python main.py
+python3 main.py
 ```
 
-El programa mostrará los documentos cargados y permitirá realizar búsquedas mediante consultas simples.
+El programa carga los documentos desde `data/documentos.txt`, construye la matriz
+documento-término y ejecuta consultas de demostración.
+
+Para ejecutar una consulta específica:
+
+```bash
+python3 main.py --query "inteligencia artificial"
+```
+
+Para usar el modo interactivo:
+
+```bash
+python3 main.py --interactive
+```
+
+La demo inicial funciona solamente con la biblioteca estándar de Python. Las dependencias de `requirements.txt` quedan como base para una etapa posterior con gráficos más avanzados.
+
+## Cómo funciona la demo
+
+La demo está separada en módulos pequeños para que el trabajo pueda dividirse sin
+bloquear a otros integrantes:
+
+* `data/documentos.txt`: textos de prueba en formato `id|titulo|texto`.
+* `src/vectorizador.py`: tokeniza textos, genera vocabulario y crea vectores.
+* `src/buscador.py`: carga documentos y calcula similitud coseno.
+* `src/graficos.py`: muestra barras ASCII con los puntajes de similitud.
+* `main.py`: conecta todo y expone comandos por consola.
+
+Flujo interno:
+
+1. Se cargan los documentos.
+2. Se limpian y separan las palabras relevantes.
+3. Se genera un vocabulario común.
+4. Cada documento se convierte en un vector de frecuencias.
+5. La consulta se convierte en un vector usando el mismo vocabulario.
+6. Se calcula similitud coseno entre consulta y documentos.
+7. Se ordenan y muestran los resultados más similares.
+
+## Estado actual y crecimiento
+
+La base funcional ya permite demostrar el cálculo principal del proyecto. El
+siguiente crecimiento recomendado es:
+
+* Falta: ampliar documentos de prueba.
+* Falta: mostrar matriz documento-término de forma más clara.
+* Falta: agregar gráficos reales con Matplotlib.
+* Falta: preparar análisis de resultados para el informe.
+* Falta: front-end básico con input de consulta, resultados y carga de documentos.
+
+El seguimiento del trabajo está en `docs/progreso.md`.
 
 Ejemplo de consulta:
 
@@ -170,20 +214,18 @@ El resultado esperado será una lista de documentos ordenados según su similitu
 
 ```txt
 Consulta: inteligencia artificial
+Matriz documento-término: 6 documentos x 58 términos
 
 Resultados más similares:
 
-1. Documento 2
-Similitud: 0.82
-Texto: La inteligencia artificial permite crear sistemas capaces de aprender...
+1. Inteligencia artificial (0.4082)
+   La inteligencia artificial permite crear sistemas capaces de aprender desde datos y resolver problemas complejos.
 
-2. Documento 5
-Similitud: 0.43
-Texto: Los modelos de lenguaje utilizan grandes cantidades de datos...
+2. Aprendizaje automatico (0.0000)
+   El aprendizaje automatico usa modelos matematicos para detectar patrones en conjuntos de datos.
 
-3. Documento 1
-Similitud: 0.10
-Texto: El fútbol es uno de los deportes más populares del mundo...
+doc1 | #############                    |  40.82%
+doc2 | -                                |   0.00%
 ```
 
 ## Análisis de resultados
@@ -245,7 +287,7 @@ Este tipo de representación vectorial se utiliza en distintas áreas de la comp
 * Recuperación de información.
 * Clasificación automática de documentos.
 
-## Estructura sugerida del proyecto
+## Estructura actual del proyecto
 
 ```txt
 buscador-semantico/
@@ -255,15 +297,19 @@ buscador-semantico/
 ├── requirements.txt
 ├── data/
 │   └── documentos.txt
+├── docs/
+│   ├── EID_Lineal (2).pdf
+│   └── progreso.md
 ├── src/
+│   ├── __init__.py
 │   ├── vectorizador.py
 │   ├── buscador.py
 │   └── graficos.py
 └── informe/
-    └── informe.pdf
+    └── pendiente
 ```
 
-## Posible contenido de requirements.txt
+## Dependencias preparadas
 
 ```txt
 numpy
@@ -282,10 +328,10 @@ Aunque este enfoque tiene limitaciones, permite comprender la base matemática d
 
 ## Integrantes
 
-* Nombre integrante 1
-* Nombre integrante 2
-* Nombre integrante 3
-* Nombre integrante 4
+* Marcelo Santana
+* Eduardo Escares
+* Patricio Benavides
+* Yaninna Alvarez
 
 ## Curso
 
