@@ -1,7 +1,0 @@
-# formato id|titulo|texto
-doc1|Inteligencia artificial|La inteligencia artificial permite crear sistemas capaces de aprender desde datos y resolver problemas complejos.
-doc2|Aprendizaje automatico|El aprendizaje automatico usa modelos matematicos para detectar patrones en conjuntos de datos.
-doc3|Redes de computadores|Las redes conectan computadores mediante protocolos de comunicacion, direcciones IP y servicios distribuidos.
-doc4|Seguridad informatica|La seguridad informatica protege sistemas, usuarios y datos frente a ataques, vulnerabilidades y accesos no autorizados.
-doc5|Cocina saludable|Una receta saludable combina verduras, proteinas y carbohidratos para preparar comida equilibrada.
-doc6|Deportes colectivos|El futbol y el basquetbol requieren estrategia, coordinacion entre jugadores y entrenamiento fisico.
