@@ -163,7 +163,7 @@ def mostrar_documentos(documentos: list[dict[str, str]]) -> None:
     )
     st.dataframe(
         estilizar_tabla_oscura(documentos_tabla),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -228,7 +228,7 @@ def mostrar_matriz(
         vocabulario_df = pd.DataFrame({"Termino": vocabulario})
         st.dataframe(
             estilizar_tabla_oscura(vocabulario_df),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             height=240,
         )
@@ -236,7 +236,7 @@ def mostrar_matriz(
     st.subheader("Tabla de la matriz")
     st.dataframe(
         estilizar_tabla_oscura(matriz_df.round(3)),
-        use_container_width=True,
+        width="stretch",
         height=380,
     )
 
@@ -322,7 +322,7 @@ def mostrar_buscador(
         )
     st.dataframe(
         estilizar_tabla_oscura(vector_consulta_df.round(3)),
-        use_container_width=True,
+        width="stretch",
     )
 
     st.subheader("Resultados ordenados")
@@ -336,7 +336,7 @@ def mostrar_buscador(
     )
     st.dataframe(
         estilizar_tabla_oscura(resultados).format({"Similitud coseno": "{:.4f}"}),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         height=420,
     )
