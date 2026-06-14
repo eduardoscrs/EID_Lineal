@@ -51,7 +51,8 @@ pip install -r requirements.txt
 ## Ejecutar la app
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
+
 ```
 
 ## Uso rapido
