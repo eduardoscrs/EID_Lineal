@@ -4,19 +4,19 @@ import seaborn as sns
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-FONDO_FIGURA = "#071826"
-FONDO_EJES = "#0a1d2c"
-COLOR_TEXTO = "#e6f6f4"
-COLOR_TEXTO_SECUNDARIO = "#a9c9c5"
-COLOR_GRID = "#1b4f69"
-COLOR_VERDE = "#14b8a6"
-COLOR_CELESTE = "#38bdf8"
+FONDO_FIGURA = "#f6f1e8"
+FONDO_EJES = "#fffaf1"
+COLOR_TEXTO = "#1f2933"
+COLOR_TEXTO_SECUNDARIO = "#685f55"
+COLOR_GRID = "#ded6c9"
+COLOR_VERDE = "#0f766e"
+COLOR_CELESTE = "#2563eb"
 CMAP_SIMILITUD = sns.color_palette(
-    ["#06131f", "#0b2233", "#0f3d3a", "#14b8a6"],
+    ["#fffaf1", "#d9f3ee", "#7fc8bd", "#0f766e"],
     as_cmap=True,
 )
 CMAP_MATRIZ = sns.color_palette(
-    ["#06131f", "#0b2233", "#123247", "#0f766e", "#2dd4bf"],
+    ["#fffaf1", "#fef3c7", "#fed7aa", "#5ba8d8", "#0f766e"],
     as_cmap=True,
 )
 
@@ -126,7 +126,7 @@ def crear_mapa_calor_matriz(matriz_df: pd.DataFrame, tipo_vectorizador: str):
         matriz_reducida,
         cmap=CMAP_MATRIZ,
         linewidths=0.35,
-        linecolor="#123247",
+        linecolor="#ded6c9",
         cbar_kws={"label": etiqueta},
         ax=ax,
     )

@@ -58,9 +58,9 @@ python -m streamlit run app.py
 ## Uso rapido
 
 1. Abre la aplicacion en el navegador.
-2. Elige `TF-IDF` o `CountVectorizer` desde la barra lateral.
-3. Revisa los documentos, el vocabulario y la matriz documento-termino.
-4. Escribe una consulta, por ejemplo `inteligencia artificial`.
-5. Observa los documentos ordenados por similitud coseno y los graficos de apoyo.
+2. En la portada, elige `TF-IDF` o `CountVectorizer`.
+3. Avanza por el recorrido de presentacion: metodo, documentos, matriz, busqueda, graficos y cierre.
+4. En la pantalla de busqueda, escribe una consulta o usa una consulta de ejemplo.
+5. Observa el ranking por similitud coseno y los graficos de apoyo.
 
 Tambien puedes agregar documentos propios desde la barra lateral durante la sesion.

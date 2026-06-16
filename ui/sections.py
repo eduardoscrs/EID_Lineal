@@ -42,9 +42,9 @@ def estilizar_tabla_oscura(dataframe: pd.DataFrame):
     return (
         dataframe.style.set_properties(
             **{
-                "background-color": "#0a1d2c",
-                "color": "#e6f6f4",
-                "border-color": "#1b4f69",
+                "background-color": "#fffaf1",
+                "color": "#1f2933",
+                "border-color": "#ded6c9",
             }
         )
         .set_table_styles(
@@ -52,15 +52,15 @@ def estilizar_tabla_oscura(dataframe: pd.DataFrame):
                 {
                     "selector": "th",
                     "props": [
-                        ("background-color", "#0b2233"),
-                        ("color", "#5eead4"),
-                        ("border-color", "#1b4f69"),
+                        ("background-color", "#16202a"),
+                        ("color", "#fff7ed"),
+                        ("border-color", "#ded6c9"),
                     ],
                 },
                 {
                     "selector": "td",
                     "props": [
-                        ("border-color", "#1b4f69"),
+                        ("border-color", "#ded6c9"),
                     ],
                 },
             ]
@@ -68,41 +68,159 @@ def estilizar_tabla_oscura(dataframe: pd.DataFrame):
     )
 
 
-def mostrar_inicio(
+def obtener_perfil_vectorizador(tipo_vectorizador: str) -> dict[str, str]:
+    """Textos cortos para explicar el metodo elegido."""
+    if tipo_vectorizador == "TF-IDF":
+        return {
+            "titulo": "TF-IDF",
+            "subtitulo": "Da mas peso a las palabras que distinguen a un documento.",
+            "idea": "Una palabra vale mas cuando aparece en un documento, pero no aparece tanto en todos los demas.",
+            "matriz": "Las celdas son pesos decimales. Un numero alto indica que el termino ayuda a identificar ese texto.",
+            "uso": "Conviene cuando importa encontrar terminos representativos, no solo contar repeticiones.",
+            "formula": "peso = frecuencia del termino x rareza en el corpus",
+        }
+
+    return {
+        "titulo": "CountVectorizer",
+        "subtitulo": "Cuenta cuantas veces aparece cada palabra en cada documento.",
+        "idea": "Una palabra vale mas si se repite mas dentro del documento.",
+        "matriz": "Las celdas son conteos enteros. Un numero alto indica mas apariciones del termino.",
+        "uso": "Conviene cuando se quiere una lectura directa y facil de explicar en la matriz.",
+        "formula": "peso = numero de apariciones del termino",
+    }
+
+
+def mostrar_marco_recorrido(
+    pasos: list[str],
+    paso_actual: int,
+    tipo_vectorizador: str,
+) -> None:
+    """Muestra el encabezado fijo del recorrido tipo presentacion."""
+    progreso = (paso_actual / (len(pasos) - 1)) * 100 if len(pasos) > 1 else 0
+    etiquetas = []
+
+    for indice, paso in enumerate(pasos):
+        estado = "done" if indice < paso_actual else "active" if indice == paso_actual else ""
+        etiquetas.append(
+            f'<div class="stepper-item {estado}">'
+            f'<span class="stepper-number">{indice + 1}</span>'
+            f'<span class="stepper-label">{escapar(paso)}</span>'
+            "</div>"
+        )
+
+    st.markdown(
+        f"""
+        <div class="story-shell">
+            <div>
+                <div class="story-kicker">Recorrido de presentacion</div>
+                <div class="story-title">{escapar(tipo_vectorizador)} en una busqueda vectorial</div>
+            </div>
+            <div class="story-progress-label">{progreso:.0f}%</div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width: {progreso:.1f}%"></div></div>
+        <div class="stepper-row">{''.join(etiquetas)}</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def mostrar_portada(
+    documentos: list[dict[str, str]],
+    tipo_vectorizador: str | None,
+) -> str | None:
+    """Pantalla inicial para elegir el tipo de representacion."""
+    st.markdown(
+        """
+        <section class="presentation-hero">
+            <div class="hero-copy">
+                <div class="hero-kicker">Algebra lineal aplicada a texto</div>
+                <h1>Buscador vectorial de documentos</h1>
+                <p>
+                    Una presentacion interactiva para mostrar como un texto se transforma en
+                    un vector, como nace la matriz documento-termino y como se calcula la
+                    similitud coseno.
+                </p>
+            </div>
+            <div class="hero-panel">
+                <div class="hero-panel-number">2</div>
+                <div class="hero-panel-text">metodos para comparar el mismo corpus</div>
+            </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Documentos base", len(documentos))
+    col2.metric("Metodos", "TF-IDF / Count")
+    col3.metric("Salida", "Ranking por similitud")
+
+    st.markdown('<div class="section-eyebrow">Primera decision</div>', unsafe_allow_html=True)
+    st.subheader("Elige como se convertiran las palabras en numeros")
+
+    actual = tipo_vectorizador or "Sin seleccion"
+    st.caption(f"Seleccion actual: {actual}")
+
+    eleccion = None
+    columna_tfidf, columna_count = st.columns(2)
+
+    with columna_tfidf:
+        st.markdown(
+            """
+            <div class="choice-card tfidf-card">
+                <div class="choice-label">Opcion A</div>
+                <h3>TF-IDF</h3>
+                <p>Resalta palabras distintivas. Es mejor para mostrar relevancia, porque baja el peso de terminos demasiado comunes.</p>
+                <div class="choice-formula">frecuencia x rareza</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Elegir TF-IDF", use_container_width=True, type="primary"):
+            eleccion = "TF-IDF"
+
+    with columna_count:
+        st.markdown(
+            """
+            <div class="choice-card count-card">
+                <div class="choice-label">Opcion B</div>
+                <h3>CountVectorizer</h3>
+                <p>Cuenta apariciones. Es mejor para explicar la matriz de forma directa, porque cada celda representa una cantidad.</p>
+                <div class="choice-formula">numero de apariciones</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("Elegir CountVectorizer", use_container_width=True):
+            eleccion = "CountVectorizer"
+
+    return eleccion
+
+
+def mostrar_metodo_vectorial(
     documentos: list[dict[str, str]],
     vocabulario: np.ndarray,
     matriz_documento_termino,
     tipo_vectorizador: str,
+    eliminar_stop_words: bool,
 ) -> None:
-    """Seccion inicial con resumen y metricas principales."""
-    st.markdown(
-        """
-        <div class="app-hero">
-            <h1>Buscador Semantico Simple</h1>
-            <p>Representacion vectorial de texto, matriz documento-termino y similitud coseno en una interfaz Streamlit.</p>
-            <div class="hero-badges">
-                <span class="hero-badge">Python</span>
-                <span class="hero-badge">Streamlit</span>
-                <span class="hero-badge">Scikit-learn</span>
-                <span class="hero-badge">Algebra lineal aplicada</span>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        """
-        <div class="info-box">
-        Esta aplicacion transforma documentos breves en vectores numericos. Luego convierte la consulta del usuario al mismo espacio vectorial y calcula que documentos son mas parecidos usando similitud coseno.
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
+    """Explica el metodo elegido como segunda pantalla del recorrido."""
+    perfil = obtener_perfil_vectorizador(tipo_vectorizador)
     valores_no_cero = matriz_documento_termino.count_nonzero()
     total_valores = matriz_documento_termino.shape[0] * matriz_documento_termino.shape[1]
     densidad = valores_no_cero / total_valores if total_valores else 0
+
+    st.markdown(
+        f"""
+        <div class="method-hero">
+            <div class="section-eyebrow">Metodo elegido</div>
+            <h1>{escapar(perfil["titulo"])}</h1>
+            <p>{escapar(perfil["subtitulo"])}</p>
+            <div class="method-formula">{escapar(perfil["formula"])}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("Documentos", len(documentos))
@@ -114,9 +232,38 @@ def mostrar_inicio(
     col4.metric("Valores no cero", valores_no_cero)
     col5.metric("Densidad", f"{densidad:.1%}")
 
-    st.caption(f"Vectorizador activo: {tipo_vectorizador}")
+    st.markdown(
+        f"""
+        <div class="explain-grid">
+            <div class="explain-card">
+                <div class="explain-title">Idea central</div>
+                <div class="explain-text">{escapar(perfil["idea"])}</div>
+            </div>
+            <div class="explain-card">
+                <div class="explain-title">Como se lee la matriz</div>
+                <div class="explain-text">{escapar(perfil["matriz"])}</div>
+            </div>
+            <div class="explain-card">
+                <div class="explain-title">Cuando conviene</div>
+                <div class="explain-text">{escapar(perfil["uso"])}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    st.subheader("Flujo de la aplicacion")
+    estado_stop_words = "activada" if eliminar_stop_words else "desactivada"
+    st.markdown(
+        f"""
+        <div class="info-box">
+        Limpieza de palabras comunes: <strong>{estado_stop_words}</strong>. Esta opcion ayuda a que conectores como
+        "de", "la" o "y" no dominen la matriz.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.subheader("Flujo que se mostrara en la exposicion")
     st.markdown(
         """
         <div class="flow-grid">
@@ -154,8 +301,11 @@ def mostrar_inicio(
 
 def mostrar_documentos(documentos: list[dict[str, str]]) -> None:
     """Muestra los documentos disponibles para la busqueda."""
-    st.header("Documentos cargados")
-    st.caption("Estos textos forman el conjunto sobre el cual se realiza la busqueda.")
+    st.markdown('<div class="section-eyebrow">Corpus de trabajo</div>', unsafe_allow_html=True)
+    st.header("Documentos que alimentan el modelo")
+    st.caption(
+        "Cada texto sera una fila de la matriz. El tema ayuda a verificar si el ranking final tiene sentido."
+    )
 
     documentos_df = pd.DataFrame(documentos)
     documentos_tabla = documentos_df.rename(
@@ -167,7 +317,14 @@ def mostrar_documentos(documentos: list[dict[str, str]]) -> None:
         hide_index=True,
     )
 
-    st.subheader("Vista rapida en tarjetas")
+    temas = documentos_df["tema"].nunique()
+    total_palabras = sum(len(documento["texto"].split()) for documento in documentos)
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Textos disponibles", len(documentos))
+    col2.metric("Temas distintos", temas)
+    col3.metric("Palabras aproximadas", total_palabras)
+
+    st.subheader("Vista rapida para presentar")
     columnas = st.columns(2)
     for indice, documento in enumerate(documentos):
         cantidad_palabras = len(documento["texto"].split())
@@ -191,6 +348,7 @@ def mostrar_matriz(
     tipo_vectorizador: str,
 ) -> None:
     """Muestra vocabulario, matriz documento-termino y dimensiones."""
+    st.markdown('<div class="section-eyebrow">Representacion numerica</div>', unsafe_allow_html=True)
     st.header("Matriz documento-termino")
 
     st.markdown(
@@ -248,12 +406,28 @@ def mostrar_buscador(
     vocabulario: np.ndarray,
 ) -> pd.DataFrame | None:
     """Permite ingresar una consulta y calcula resultados de similitud."""
-    st.header("Buscador")
-    st.caption("Escribe una consulta y la aplicacion la comparara con todos los documentos.")
+    st.markdown('<div class="section-eyebrow">Demo en vivo</div>', unsafe_allow_html=True)
+    st.header("Consulta y similitud coseno")
+    st.caption("La consulta se convierte al mismo espacio vectorial que los documentos.")
+
+    st.markdown('<div class="sample-row-title">Consultas de ejemplo</div>', unsafe_allow_html=True)
+    consultas_ejemplo = [
+        "inteligencia artificial",
+        "programacion con datos",
+        "deporte de equipo",
+        "seguridad en redes",
+    ]
+    columnas_ejemplo = st.columns(len(consultas_ejemplo))
+    for indice, consulta_ejemplo in enumerate(consultas_ejemplo):
+        with columnas_ejemplo[indice]:
+            if st.button(consulta_ejemplo, key=f"consulta_ejemplo_{indice}", use_container_width=True):
+                st.session_state.consulta_busqueda = consulta_ejemplo
+                st.rerun()
 
     consulta = st.text_input(
         "Consulta de busqueda",
         placeholder="Ejemplo: inteligencia artificial",
+        key="consulta_busqueda",
     )
 
     if not consulta.strip():
@@ -369,52 +543,111 @@ def mostrar_graficos(
     resultados: pd.DataFrame | None,
 ) -> None:
     """Muestra las visualizaciones principales de apoyo."""
-    st.header("Graficos")
+    st.markdown('<div class="section-eyebrow">Evidencia visual</div>', unsafe_allow_html=True)
+    st.header("Graficos para explicar el resultado")
+    st.caption("Estas vistas sirven como apoyo para responder que palabras pesan mas y que documentos quedan cerca.")
 
-    grafico_terminos, matriz_visual, mapa_calor, grafico_consulta = st.tabs(
-        [
-            "Terminos principales",
-            "Matriz visual",
-            "Similitud entre documentos",
-            "Similitud con consulta",
-        ]
+    st.subheader("1. Terminos principales")
+    st.pyplot(
+        crear_grafico_terminos(matriz_df, tipo_vectorizador),
+        clear_figure=True,
+        width="stretch",
+    )
+    st.divider()
+
+    st.subheader("2. Similitud con la consulta")
+    if resultados is None:
+        st.info("Ingresa una consulta en la pantalla anterior para ver este grafico.")
+    else:
+        st.pyplot(
+            crear_grafico_barras_similitud(resultados),
+            clear_figure=True,
+            width="stretch",
+        )
+    st.divider()
+
+    st.subheader("3. Matriz como mapa de calor")
+    st.pyplot(
+        crear_mapa_calor_matriz(matriz_df, tipo_vectorizador),
+        clear_figure=True,
+        width="stretch",
+    )
+    st.divider()
+
+    st.subheader("4. Cercania entre documentos")
+    st.pyplot(
+        crear_mapa_calor_documentos(matriz_documento_termino, etiquetas_documentos),
+        clear_figure=True,
+        width="stretch",
     )
 
-    with grafico_terminos:
-        st.pyplot(crear_grafico_terminos(matriz_df, tipo_vectorizador), clear_figure=True)
 
-    with matriz_visual:
-        st.pyplot(
-            crear_mapa_calor_matriz(matriz_df, tipo_vectorizador),
-            clear_figure=True,
-        )
+def mostrar_cierre(
+    tipo_vectorizador: str,
+    eliminar_stop_words: bool,
+    resultados: pd.DataFrame | None,
+) -> None:
+    """Pantalla final con ideas de cierre para la presentacion."""
+    perfil = obtener_perfil_vectorizador(tipo_vectorizador)
+    estado_stop_words = "con limpieza de palabras comunes" if eliminar_stop_words else "sin limpieza de palabras comunes"
 
-    with mapa_calor:
-        st.pyplot(
-            crear_mapa_calor_documentos(matriz_documento_termino, etiquetas_documentos),
-            clear_figure=True,
-        )
-
-    with grafico_consulta:
-        if resultados is None:
-            st.info("Ingresa una consulta en la seccion Buscador para ver este grafico.")
-        else:
-            st.pyplot(crear_grafico_barras_similitud(resultados), clear_figure=True)
-
-
-def mostrar_funcionamiento(tipo_vectorizador: str) -> None:
-    """Explicacion breve dentro de la app, sin formato de informe."""
-    st.header("Funcionamiento interno")
+    st.markdown('<div class="section-eyebrow">Cierre de la exposicion</div>', unsafe_allow_html=True)
+    st.header("Idea final")
     st.markdown(
         f"""
-        Esta aplicacion usa **{tipo_vectorizador}** para transformar texto en numeros.
-
-        **Documento-termino:** cada documento se representa como una fila y cada termino como una columna.
-
-        **Vector de consulta:** cuando escribes una busqueda, se crea un vector con el mismo vocabulario de la matriz.
-
-        **Similitud coseno:** mide el angulo entre el vector de la consulta y el vector de cada documento.
-        Si el valor esta cerca de **1**, los vectores apuntan en una direccion parecida y los textos son mas similares.
-        Si el valor esta cerca de **0**, comparten poca informacion relevante.
-        """
+        <div class="closing-band">
+            <h2>Un buscador puede comparar textos si primero los convierte en vectores.</h2>
+            <p>
+                En esta version se uso <strong>{escapar(tipo_vectorizador)}</strong>,
+                {escapar(estado_stop_words)}. La matriz permite aplicar algebra lineal
+                y la similitud coseno ordena los documentos mas cercanos a la consulta.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
+
+    col1, col2, col3 = st.columns(3)
+    col1.markdown(
+        f"""
+        <div class="takeaway-card">
+            <div class="takeaway-title">Metodo</div>
+            <div class="takeaway-text">{escapar(perfil["idea"])}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    col2.markdown(
+        """
+        <div class="takeaway-card">
+            <div class="takeaway-title">Matriz</div>
+            <div class="takeaway-text">Filas son documentos, columnas son terminos y cada celda guarda un peso numerico.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    col3.markdown(
+        """
+        <div class="takeaway-card">
+            <div class="takeaway-title">Similitud</div>
+            <div class="takeaway-text">El coseno compara la direccion de los vectores y devuelve un ranking interpretable.</div>
+        </div>
+        """
+        ,
+        unsafe_allow_html=True,
+    )
+
+    if resultados is not None and not resultados.empty:
+        mejor = resultados.iloc[0]
+        st.markdown(
+            f"""
+            <div class="final-result">
+                <div class="top-result-kicker">Ultima consulta guardada</div>
+                <div class="top-result-title">{escapar(mejor["Documento"])} - {escapar(mejor["Tema"])}</div>
+                <div class="score-label">Similitud coseno: {float(mejor["Similitud coseno"]):.4f}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.info("La pantalla de busqueda todavia no tiene una consulta guardada.")

@@ -1,19 +1,42 @@
 import streamlit as st
 
 
-def mostrar_sidebar() -> tuple[str, bool]:
-    """Renderiza configuracion, selector de vectorizador y carga manual."""
-    st.sidebar.header("Configuracion")
-    tipo_vectorizador = st.sidebar.radio(
-        "Representacion vectorial",
-        options=["TF-IDF", "CountVectorizer"],
-        help="TF-IDF pondera terminos relevantes. CountVectorizer cuenta apariciones.",
-    )
-    eliminar_stop_words = st.sidebar.checkbox(
+def mostrar_sidebar(pasos: list[str]) -> bool:
+    """Renderiza el panel lateral de apoyo para la presentacion."""
+    st.sidebar.header("Panel de exposicion")
+
+    tipo_actual = st.session_state.tipo_vectorizador
+    if tipo_actual is None:
+        st.sidebar.info("El recorrido parte eligiendo TF-IDF o CountVectorizer.")
+    else:
+        st.sidebar.caption("Metodo activo")
+        tipo_vectorizador = st.sidebar.selectbox(
+            "Representacion vectorial",
+            options=["TF-IDF", "CountVectorizer"],
+            index=["TF-IDF", "CountVectorizer"].index(tipo_actual),
+            help="TF-IDF pondera terminos relevantes. CountVectorizer cuenta apariciones.",
+        )
+        if tipo_vectorizador != tipo_actual:
+            st.session_state.tipo_vectorizador = tipo_vectorizador
+            st.rerun()
+
+    st.sidebar.checkbox(
         "Eliminar palabras comunes",
-        value=True,
+        key="eliminar_stop_words",
         help="Quita conectores frecuentes como 'de', 'la', 'y' para una matriz mas clara.",
     )
+
+    st.sidebar.divider()
+    if st.session_state.tipo_vectorizador is not None:
+        paso_elegido = st.sidebar.radio(
+            "Recorrido",
+            options=list(range(len(pasos))),
+            format_func=lambda indice: f"{indice + 1}. {pasos[indice]}",
+            index=st.session_state.paso_actual,
+        )
+        if paso_elegido != st.session_state.paso_actual:
+            st.session_state.paso_actual = paso_elegido
+            st.rerun()
 
     st.sidebar.divider()
     st.sidebar.subheader("Agregar documento")
@@ -48,4 +71,4 @@ def mostrar_sidebar() -> tuple[str, bool]:
             st.session_state.documentos_usuario = []
             st.rerun()
 
-    return tipo_vectorizador, eliminar_stop_words
+    return st.session_state.eliminar_stop_words
