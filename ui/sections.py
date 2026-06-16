@@ -170,7 +170,13 @@ def mostrar_portada(
             <div class="choice-card tfidf-card">
                 <div class="choice-label">Opcion A</div>
                 <h3>TF-IDF</h3>
-                <p>Resalta palabras distintivas. Es mejor para mostrar relevancia, porque baja el peso de terminos demasiado comunes.</p>
+                <p>TF-IDF significa Term Frequency - Inverse Document Frequency. Es una técnica que no solo cuenta cuántas veces aparece una palabra, sino que también analiza qué tan importante o distintiva es dentro del conjunto de documentos.
+
+La idea es que una palabra será más importante si aparece mucho en un documento, pero no aparece en todos los demás documentos.
+
+Por ejemplo, palabras muy comunes como “el”, “la”, “de” o “y” pueden aparecer muchas veces, pero no ayudan mucho a diferenciar un documento de otro. En cambio, palabras como “inteligencia artificial”, “ciberseguridad” o “Python” pueden ser más útiles porque representan mejor el tema del documento.
+
+TF-IDF baja el peso de las palabras demasiado comunes y aumenta el peso de las palabras más representativas o específicas.</p>
                 <div class="choice-formula">frecuencia x rareza</div>
             </div>
             """,
@@ -185,7 +191,13 @@ def mostrar_portada(
             <div class="choice-card count-card">
                 <div class="choice-label">Opcion B</div>
                 <h3>CountVectorizer</h3>
-                <p>Cuenta apariciones. Es mejor para explicar la matriz de forma directa, porque cada celda representa una cantidad.</p>
+                <p>convierte cada documento en un vector contando cuántas veces aparece cada palabra del vocabulario.
+
+En esta representación, cada fila corresponde a un documento y cada columna corresponde a una palabra. El valor de cada celda indica la cantidad de veces que esa palabra aparece en ese documento.
+
+Por ejemplo, si la palabra “Python” aparece 3 veces en un documento, en la matriz aparecerá el valor 3 para esa palabra.
+
+Este método es útil para explicar la matriz documento-término de forma directa, porque los valores representan frecuencias reales de palabras. Sin embargo, tiene una limitación: puede darle mucha importancia a palabras que aparecen muchas veces, aunque no sean tan relevantes para entender el contenido del texto.</p>
                 <div class="choice-formula">numero de apariciones</div>
             </div>
             """,
