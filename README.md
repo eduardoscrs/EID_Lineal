@@ -31,8 +31,9 @@ proyecto de algebra/
 - `app.py`: punto de entrada. Coordina la aplicacion y conecta todos los modulos.
 - `data/example_documents.py`: documentos de ejemplo usados por el buscador.
 - `data/stop_words.py`: palabras comunes que se pueden eliminar de la matriz.
+- `logic/document_loader.py`: lectura de archivos subidos desde la interfaz.
 - `logic/vector_model.py`: vectorizacion, matriz documento-termino, vector de consulta y similitud coseno.
-- `ui/sidebar.py`: controles laterales para elegir vectorizador y agregar documentos.
+- `ui/sidebar.py`: controles laterales para elegir vectorizador, añadir textos y subir documentos.
 - `ui/sections.py`: pantallas principales de la app.
 - `ui/styles.py`: configuracion visual de Streamlit.
 - `visualization/charts.py`: graficos de barras, mapa de calor y terminos principales.
@@ -63,4 +64,6 @@ python -m streamlit run app.py
 4. En la pantalla de busqueda, escribe una consulta o usa una consulta de ejemplo.
 5. Observa el ranking por similitud coseno y los graficos de apoyo.
 
-Tambien puedes agregar documentos propios desde la barra lateral durante la sesion.
+Tambien puedes añadir textos o subir varios documentos desde la barra lateral durante la sesion. La carga acepta archivos `txt`, `md`, `csv`, `pdf` y `docx`.
+Si quieres trabajar solo con documentos propios, desmarca `Documentos de ejemplo` en la barra lateral.
+El vocabulario ignora numeros sueltos y codigos alfanumericos; solo conserva palabras y numeros de cuatro digitos como años.
