@@ -443,7 +443,7 @@ def configurar_pagina() -> None:
             background: var(--surface-strong);
             border: 1px solid var(--line);
             padding: 0.95rem;
-            min-height: 180px;
+            min-height: 220px;
             margin-bottom: 0.75rem;
         }
 
@@ -475,7 +475,57 @@ def configurar_pagina() -> None:
         .doc-text {
             color: var(--muted);
             line-height: 1.42;
+        }
+
+        .preview-shell {
+            background: #fffdf8;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
             margin-bottom: 0.65rem;
+        }
+
+        .preview-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #f1eadf;
+            border-bottom: 1px solid var(--line);
+            color: #766b5f;
+            font-size: 0.76rem;
+            font-weight: 800;
+            padding: 0.35rem 0.55rem;
+        }
+
+        .preview-dot {
+            width: 0.62rem;
+            height: 0.62rem;
+            border-radius: 999px;
+            background: var(--teal);
+            display: inline-flex;
+            flex: 0 0 auto;
+        }
+
+        .preview-title {
+            line-height: 1;
+        }
+
+        .preview-shell .doc-text,
+        .preview-shell .top-result-text {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            padding: 0.75rem 0.85rem;
+        }
+
+        .preview-shell .doc-text {
+            -webkit-line-clamp: 8;
+            min-height: 10.1rem;
+        }
+
+        .top-preview .top-result-text {
+            -webkit-line-clamp: 7;
+            min-height: 8.8rem;
         }
 
         .doc-meta {
@@ -490,6 +540,15 @@ def configurar_pagina() -> None:
             margin: 0.45rem 0 1rem 0;
         }
 
+        .vocabulary-pill-row {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.2rem 0 0.55rem 0;
+            margin-bottom: 0.45rem;
+            scrollbar-width: thin;
+        }
+
         .pill {
             background: #eef8f6;
             border: 1px solid #a6d8cf;
@@ -498,6 +557,7 @@ def configurar_pagina() -> None:
             padding: 0.25rem 0.55rem;
             font-size: 0.82rem;
             font-weight: 750;
+            flex: 0 0 auto;
         }
 
         .sample-row-title {
@@ -532,7 +592,6 @@ def configurar_pagina() -> None:
         .top-result-text {
             color: var(--muted);
             line-height: 1.45;
-            margin-bottom: 0.65rem;
         }
 
         .rank-card {

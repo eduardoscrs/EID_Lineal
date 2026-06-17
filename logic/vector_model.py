@@ -6,6 +6,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from data.stop_words import STOP_WORDS_ES
 
 
+TOKEN_PATTERN_TEXTO = r"(?u)\b(?:[^\W\d_]{2,}|\d{4})\b"
+
+
 def crear_vectorizador(tipo_vectorizador: str, eliminar_stop_words: bool):
     """Devuelve CountVectorizer o TfidfVectorizer segun la seleccion."""
     stop_words = STOP_WORDS_ES if eliminar_stop_words else None
@@ -15,12 +18,14 @@ def crear_vectorizador(tipo_vectorizador: str, eliminar_stop_words: bool):
             lowercase=True,
             strip_accents="unicode",
             stop_words=stop_words,
+            token_pattern=TOKEN_PATTERN_TEXTO,
         )
 
     return CountVectorizer(
         lowercase=True,
         strip_accents="unicode",
         stop_words=stop_words,
+        token_pattern=TOKEN_PATTERN_TEXTO,
     )
 
 

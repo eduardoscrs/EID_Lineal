@@ -10,7 +10,7 @@
 | Matriz documento-termino | Tabla, vocabulario y dimensiones visibles | 75% | Evidencia clara para informe |
 | Graficos | Barras, mapas de calor y terminos principales disponibles | 70% | Graficos revisados y capturados |
 | Documentos de ejemplo | Hay base de documentos integrada | 60% | Textos ampliados y balanceados |
-| Carga de documentos | Permite agregar texto manual en la sesion | 45% | Definir si queda manual o se agrega subida |
+| Carga de documentos | Permite añadir texto manual y subir varios archivos | 70% | Probar con documentos reales del informe |
 | README y ejecucion | Instrucciones principales listas | 65% | Guia final sin ambiguedades |
 | Informe y presentacion | Estructura pendiente de completar | 30% | Informe con capturas, analisis y conclusiones |
 | QA final | Pruebas manuales iniciales realizadas | 45% | Lista de validacion completa |
@@ -30,7 +30,7 @@
 
 - Falta: confirmar que todos pueden ejecutar `python -m streamlit run app.py`
 - Falta: dejar cerrado el dataset base de documentos
-- Falta: definir si la carga sera texto manual o subida de archivo
+- Falta: probar subida con documentos reales del grupo
 
 ### Dia 2
 

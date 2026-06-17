@@ -18,6 +18,60 @@ def escapar(texto: object) -> str:
     return html.escape(str(texto), quote=True)
 
 
+def normalizar_espacios(texto: object) -> str:
+    """Compacta saltos de linea y espacios repetidos para vistas previas."""
+    return " ".join(str(texto).split())
+
+
+def crear_vista_previa(texto: object, limite: int = 420) -> str:
+    """Devuelve un resumen corto sin modificar el texto usado por el modelo."""
+    texto_limpio = normalizar_espacios(texto)
+    if len(texto_limpio) <= limite:
+        return texto_limpio
+
+    corte = texto_limpio.rfind(" ", 0, limite)
+    if corte < limite * 0.65:
+        corte = limite
+    return texto_limpio[:corte].rstrip() + "..."
+
+
+def prioridad_visual_termino(termino: object) -> tuple[int, str]:
+    """Mueve numeros y abreviaciones cortas al final de las vistas."""
+    termino_texto = str(termino)
+    es_numero_anio = termino_texto.isdigit() and len(termino_texto) == 4
+    es_abreviacion_corta = len(termino_texto) <= 2
+    prioridad = 1 if es_numero_anio or es_abreviacion_corta else 0
+    return prioridad, termino_texto
+
+
+def ordenar_terminos_para_mostrar(terminos) -> list[str]:
+    """Ordena terminos solo para que la interfaz sea mas legible."""
+    return sorted([str(termino) for termino in terminos], key=prioridad_visual_termino)
+
+
+def ordenar_columnas_por_valor(dataframe: pd.DataFrame) -> list[str]:
+    """Ordena columnas dejando primero los pesos mas altos de una fila."""
+    valores = dataframe.iloc[0]
+    return sorted(
+        dataframe.columns,
+        key=lambda termino: (
+            -float(valores[termino]),
+            *prioridad_visual_termino(termino),
+        ),
+    )
+
+
+def calcular_altura_tabla(cantidad_filas: int, maximo_filas: int = 10) -> int:
+    """Ajusta tablas a sus filas visibles y deja scroll desde 10 filas."""
+    filas_visibles = max(1, min(cantidad_filas, maximo_filas))
+    return 52 + filas_visibles * 36
+
+
+def calcular_altura_tabla_matriz(cantidad_filas: int) -> int:
+    """Deja la tabla de vocabulario alineada con las metricas laterales."""
+    return max(calcular_altura_tabla(cantidad_filas), 515)
+
+
 def clasificar_similitud(valor: float) -> str:
     """Entrega una etiqueta simple para explicar el puntaje."""
     if valor >= 0.60:
@@ -320,13 +374,19 @@ def mostrar_documentos(documentos: list[dict[str, str]]) -> None:
     )
 
     documentos_df = pd.DataFrame(documentos)
-    documentos_tabla = documentos_df.rename(
-        columns={"nombre": "Documento", "tema": "Tema", "texto": "Texto"}
+    documentos_tabla = pd.DataFrame(
+        {
+            "Documento": documentos_df["nombre"],
+            "Tema": documentos_df["tema"],
+            "Vista previa": documentos_df["texto"].apply(lambda texto: crear_vista_previa(texto, 180)),
+            "Palabras": documentos_df["texto"].apply(lambda texto: len(str(texto).split())),
+        }
     )
     st.dataframe(
         estilizar_tabla_oscura(documentos_tabla),
         width="stretch",
         hide_index=True,
+        height=calcular_altura_tabla(len(documentos_tabla)),
     )
 
     temas = documentos_df["tema"].nunique()
@@ -340,13 +400,20 @@ def mostrar_documentos(documentos: list[dict[str, str]]) -> None:
     columnas = st.columns(2)
     for indice, documento in enumerate(documentos):
         cantidad_palabras = len(documento["texto"].split())
+        vista_previa = crear_vista_previa(documento["texto"])
         tarjeta = f"""
         <div class="doc-card">
             <div class="doc-card-header">
                 <span class="doc-name">{escapar(documento["nombre"])}</span>
                 <span class="doc-topic">{escapar(documento["tema"])}</span>
             </div>
-            <div class="doc-text">{escapar(documento["texto"])}</div>
+            <div class="preview-shell">
+                <div class="preview-bar">
+                    <span class="preview-dot"></span>
+                    <span class="preview-title">Vista previa</span>
+                </div>
+                <div class="doc-text">{escapar(vista_previa)}</div>
+            </div>
             <div class="doc-meta">{cantidad_palabras} palabras</div>
         </div>
         """
@@ -374,6 +441,7 @@ def mostrar_matriz(
     )
 
     col1, col2 = st.columns([1, 2])
+    altura_tablas_documentos = calcular_altura_tabla_matriz(matriz_df.shape[0])
     with col1:
         st.subheader("Dimensiones")
         valores_no_cero = int((matriz_df.to_numpy() != 0).sum())
@@ -387,27 +455,29 @@ def mostrar_matriz(
 
     with col2:
         st.subheader("Vocabulario generado")
+        vocabulario_mostrar = ordenar_terminos_para_mostrar(vocabulario)
         terminos_destacados = "".join(
             f'<span class="pill">{escapar(termino)}</span>'
-            for termino in vocabulario[:30]
+            for termino in vocabulario_mostrar[:30]
         )
         st.markdown(
-            f'<div class="pill-row">{terminos_destacados}</div>',
+            f'<div class="pill-row vocabulary-pill-row">{terminos_destacados}</div>',
             unsafe_allow_html=True,
         )
-        vocabulario_df = pd.DataFrame({"Termino": vocabulario})
+        vocabulario_df = pd.DataFrame({"Termino": vocabulario_mostrar})
         st.dataframe(
             estilizar_tabla_oscura(vocabulario_df),
             width="stretch",
             hide_index=True,
-            height=240,
+            height=altura_tablas_documentos,
         )
 
     st.subheader("Tabla de la matriz")
+    columnas_matriz = [termino for termino in vocabulario_mostrar if termino in matriz_df.columns]
     st.dataframe(
-        estilizar_tabla_oscura(matriz_df.round(3)),
+        estilizar_tabla_oscura(matriz_df.loc[:, columnas_matriz].round(3)),
         width="stretch",
-        height=380,
+        height=altura_tablas_documentos,
     )
 
 
@@ -472,6 +542,7 @@ def mostrar_buscador(
         )
 
     mejor = resultados.iloc[0]
+    vista_previa_mejor = crear_vista_previa(mejor["Texto"], 520)
     st.markdown(
         f"""
         <div class="top-result-card">
@@ -479,7 +550,13 @@ def mostrar_buscador(
             <div class="top-result-title">
                 {escapar(mejor["Documento"])} - {escapar(mejor["Tema"])}
             </div>
-            <div class="top-result-text">{escapar(mejor["Texto"])}</div>
+            <div class="preview-shell top-preview">
+                <div class="preview-bar">
+                    <span class="preview-dot"></span>
+                    <span class="preview-title">Vista previa</span>
+                </div>
+                <div class="top-result-text">{escapar(vista_previa_mejor)}</div>
+            </div>
             {construir_barra_puntaje(float(mejor["Similitud coseno"]))}
             <div class="score-label">
                 Puntaje: {float(mejor["Similitud coseno"]):.4f} - {clasificar_similitud(float(mejor["Similitud coseno"]))}
@@ -498,6 +575,15 @@ def mostrar_buscador(
     valores_consulta = vector_consulta_df.loc["Consulta"]
     terminos_consulta = valores_consulta[valores_consulta > 0].sort_values(ascending=False)
     if not terminos_consulta.empty:
+        terminos_consulta = terminos_consulta.loc[
+            sorted(
+                terminos_consulta.index,
+                key=lambda termino: (
+                    -float(terminos_consulta[termino]),
+                    *prioridad_visual_termino(termino),
+                ),
+            )
+        ]
         chips_consulta = "".join(
             f'<span class="query-chip">{escapar(termino)}: {valor:.3f}</span>'
             for termino, valor in terminos_consulta.head(12).items()
@@ -506,9 +592,11 @@ def mostrar_buscador(
             f'<div class="pill-row">{chips_consulta}</div>',
             unsafe_allow_html=True,
         )
+    columnas_vector_consulta = ordenar_columnas_por_valor(vector_consulta_df)
     st.dataframe(
-        estilizar_tabla_oscura(vector_consulta_df.round(3)),
+        estilizar_tabla_oscura(vector_consulta_df.loc[:, columnas_vector_consulta].round(3)),
         width="stretch",
+        height=calcular_altura_tabla(len(vector_consulta_df)),
     )
 
     st.subheader("Resultados ordenados")
@@ -520,11 +608,23 @@ def mostrar_buscador(
         """,
         unsafe_allow_html=True,
     )
+    resultados_tabla = resultados.copy()
+    resultados_tabla["Vista previa"] = resultados_tabla["Texto"].apply(
+        lambda texto: crear_vista_previa(texto, 160)
+    )
+    resultados_tabla = resultados_tabla.drop(columns=["Texto"])
+    columnas_resultados = [
+        "Ranking",
+        "Documento",
+        "Tema",
+        "Vista previa",
+        "Similitud coseno",
+    ]
     st.dataframe(
-        estilizar_tabla_oscura(resultados).format({"Similitud coseno": "{:.4f}"}),
+        estilizar_tabla_oscura(resultados_tabla[columnas_resultados]).format({"Similitud coseno": "{:.4f}"}),
         width="stretch",
         hide_index=True,
-        height=420,
+        height=calcular_altura_tabla(len(resultados_tabla)),
     )
 
     st.subheader("Ranking visual")

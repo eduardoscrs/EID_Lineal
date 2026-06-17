@@ -36,10 +36,16 @@ def inicializar_estado() -> None:
     """Crea las variables de sesion necesarias."""
     if "documentos_usuario" not in st.session_state:
         st.session_state.documentos_usuario = []
+    if "archivos_documentos_procesados" not in st.session_state:
+        st.session_state.archivos_documentos_procesados = []
+    if "subidor_archivos_version" not in st.session_state:
+        st.session_state.subidor_archivos_version = 0
     if "tipo_vectorizador" not in st.session_state:
         st.session_state.tipo_vectorizador = None
     if "eliminar_stop_words" not in st.session_state:
         st.session_state.eliminar_stop_words = True
+    if "usar_documentos_ejemplo" not in st.session_state:
+        st.session_state.usar_documentos_ejemplo = True
     if "paso_actual" not in st.session_state:
         st.session_state.paso_actual = 0
     if "consulta_busqueda" not in st.session_state:
@@ -48,7 +54,11 @@ def inicializar_estado() -> None:
 
 def construir_documentos() -> list[dict[str, str]]:
     """Une los documentos base con los documentos agregados desde la interfaz."""
-    return DOCUMENTOS_EJEMPLO + st.session_state.documentos_usuario
+    documentos = []
+    if st.session_state.usar_documentos_ejemplo:
+        documentos.extend(DOCUMENTOS_EJEMPLO)
+    documentos.extend(st.session_state.documentos_usuario)
+    return documentos
 
 
 def normalizar_paso() -> None:
@@ -128,6 +138,18 @@ def main() -> None:
         eleccion = mostrar_portada(documentos=documentos, tipo_vectorizador=None)
         if eleccion is not None:
             aplicar_eleccion_vectorizador(eleccion)
+        return
+
+    if not documentos:
+        mostrar_marco_recorrido(
+            pasos=PASOS_PRESENTACION,
+            paso_actual=st.session_state.paso_actual,
+            tipo_vectorizador=tipo_vectorizador,
+        )
+        st.warning(
+            "No hay documentos para construir la matriz. Activa los documentos de ejemplo, añade texto o sube documentos."
+        )
+        mostrar_controles_recorrido()
         return
 
     vectorizador, matriz_documento_termino, vocabulario = generar_modelo_vectorial(
