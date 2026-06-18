@@ -226,7 +226,7 @@ def configurar_pagina() -> None:
 
         .stepper-row {
             display: grid;
-            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-columns: repeat(8, minmax(0, 1fr));
             gap: 0.45rem;
             margin-bottom: 1.1rem;
         }

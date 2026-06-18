@@ -8,6 +8,7 @@ from logic.vector_model import (
     preparar_resultados,
 )
 from ui.sections import (
+    mostrar_analisis_evidencia,
     mostrar_buscador,
     mostrar_cierre,
     mostrar_documentos,
@@ -28,6 +29,7 @@ PASOS_PRESENTACION = [
     "Construir matriz",
     "Probar busqueda",
     "Leer graficos",
+    "Analizar evidencia",
     "Cerrar idea",
 ]
 
@@ -204,6 +206,14 @@ def main() -> None:
             etiquetas_documentos=etiquetas_documentos,
             tipo_vectorizador=tipo_vectorizador,
             resultados=resultados,
+        )
+    elif st.session_state.paso_actual == 6:
+        mostrar_analisis_evidencia(
+            documentos=documentos,
+            vectorizador=vectorizador,
+            matriz_documento_termino=matriz_documento_termino,
+            matriz_df=matriz_df,
+            vocabulario=vocabulario,
         )
     else:
         mostrar_cierre(tipo_vectorizador, eliminar_stop_words, resultados)

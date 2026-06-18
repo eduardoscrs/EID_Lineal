@@ -60,9 +60,10 @@ python -m streamlit run app.py
 
 1. Abre la aplicacion en el navegador.
 2. En la portada, elige `TF-IDF` o `CountVectorizer`.
-3. Avanza por el recorrido de presentacion: metodo, documentos, matriz, busqueda, graficos y cierre.
+3. Avanza por el recorrido de presentacion: metodo, documentos, matriz, busqueda, graficos, analisis y cierre.
 4. En la pantalla de busqueda, escribe una consulta o usa una consulta de ejemplo.
 5. Observa el ranking por similitud coseno y los graficos de apoyo.
+6. En la pantalla de analisis, revisa la tabla de evidencia y descarga el CSV si necesitas guardar los resultados.
 
 Tambien puedes añadir textos o subir varios documentos desde la barra lateral durante la sesion. La carga acepta archivos `txt`, `md`, `csv`, `pdf` y `docx`.
 Si quieres trabajar solo con documentos propios, desmarca `Documentos de ejemplo` en la barra lateral.
