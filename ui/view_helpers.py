@@ -86,9 +86,9 @@ def estilizar_tabla_oscura(dataframe: pd.DataFrame):
     return (
         dataframe.style.set_properties(
             **{
-                "background-color": "#fffaf1",
-                "color": "#1f2933",
-                "border-color": "#ded6c9",
+                "background-color": "#f8fbfd",
+                "color": "#27374d",
+                "border-color": "#dde6ed",
             }
         )
         .set_table_styles(
@@ -96,15 +96,15 @@ def estilizar_tabla_oscura(dataframe: pd.DataFrame):
                 {
                     "selector": "th",
                     "props": [
-                        ("background-color", "#16202a"),
-                        ("color", "#fff7ed"),
-                        ("border-color", "#ded6c9"),
+                        ("background-color", "#27374d"),
+                        ("color", "#ffffff"),
+                        ("border-color", "#526d82"),
                     ],
                 },
                 {
                     "selector": "td",
                     "props": [
-                        ("border-color", "#ded6c9"),
+                        ("border-color", "#dde6ed"),
                     ],
                 },
             ]
