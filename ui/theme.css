@@ -1,32 +1,42 @@
 :root {
-    --paper: #f6f1e8;
-    --paper-soft: #fbf8f1;
-    --surface: #fffaf1;
+    --paper: #eef3f7;
+    --paper-soft: #dde6ed;
+    --surface: #ffffff;
     --surface-strong: #ffffff;
-    --ink: #1f2933;
-    --muted: #685f55;
-    --line: #ded6c9;
-    --line-strong: #cdbfae;
-    --teal: #0f766e;
-    --teal-soft: #d9f3ee;
-    --blue: #2563eb;
-    --blue-soft: #dbeafe;
-    --coral: #c2410c;
-    --coral-soft: #ffedd5;
-    --amber: #b7791f;
-    --amber-soft: #fef3c7;
-    --sidebar: #16202a;
+    --ink: #27374d;
+    --muted: #526d82;
+    --line: #dde6ed;
+    --line-strong: #9db2bf;
+    --teal: #526d82;
+    --teal-soft: #dde6ed;
+    --blue: #27374d;
+    --blue-soft: #dde6ed;
+    --coral: #526d82;
+    --coral-soft: #dde6ed;
+    --amber: #526d82;
+    --amber-soft: #dde6ed;
+    --sidebar: #27374d;
+    color-scheme: light;
 }
 
+html,
+body,
 .stApp {
-    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-soft) 58%, #ede7db 100%);
+    background: var(--paper);
+    color: var(--ink);
+    color-scheme: light;
+}
+
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"] {
+    background: var(--paper);
     color: var(--ink);
 }
 
 .main .block-container {
-    padding-top: 1.25rem;
+    padding-top: 0.85rem;
     padding-bottom: 2.25rem;
-    max-width: 1240px;
+    max-width: 1320px;
 }
 
 h1, h2, h3, h4 {
@@ -38,9 +48,20 @@ p, li, label, span {
     color: inherit;
 }
 
+[data-testid="stMain"] p,
+[data-testid="stMain"] li,
+[data-testid="stMain"] label,
+[data-testid="stMain"] span {
+    color: var(--ink);
+}
+
 [data-testid="stSidebar"] {
     background: var(--sidebar);
-    border-right: 1px solid #263746;
+    border-right: 1px solid #526d82;
+}
+
+[data-testid="stSidebarUserContent"] {
+    padding: 1.1rem 1.15rem 1.4rem 1.15rem;
 }
 
 [data-testid="stSidebar"] h1,
@@ -49,28 +70,65 @@ p, li, label, span {
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] span {
-    color: #f7efe3;
+    color: #f7f9fb;
 }
 
 [data-testid="stSidebar"] [data-testid="stAlert"] {
-    background: #223140;
-    border: 1px solid #3b5368;
-    color: #f7efe3;
+    background: #dde6ed;
+    border: 1px solid #9db2bf;
+    color: var(--ink);
+}
+
+[data-testid="stSidebar"] hr {
+    border-color: #526d82;
+    margin: 1rem 0;
+}
+
+[data-testid="stSidebar"] [data-testid="stForm"] {
+    border: 1px solid #526d82;
+    border-radius: 12px;
+    padding: 0.8rem;
+    background: rgba(221, 230, 237, 0.08);
+}
+
+[data-testid="stSidebar"] [data-testid="stFileUploader"] {
+    margin-bottom: 0.35rem;
+}
+
+[data-testid="stSidebar"] [data-testid="stFileUploader"] > label,
+[data-testid="stSidebar"] [data-testid="stFileUploader"] > label * {
+    color: #f7f9fb !important;
 }
 
 .stTextInput input,
 .stTextArea textarea {
-    background: #fffdf8;
+    background: var(--surface-strong);
     color: var(--ink);
+    -webkit-text-fill-color: var(--ink);
     border: 1px solid var(--line-strong);
-    border-radius: 8px;
+    border-radius: 10px;
+}
+
+.stTextInput input::placeholder,
+.stTextArea textarea::placeholder {
+    color: #6f8090 !important;
+    -webkit-text-fill-color: #6f8090 !important;
+    opacity: 1 !important;
 }
 
 [data-testid="stSidebar"] .stTextInput input,
 [data-testid="stSidebar"] .stTextArea textarea {
-    background: #243445;
-    color: #fffaf1;
-    border: 1px solid #496173;
+    background: #ffffff;
+    color: var(--ink);
+    -webkit-text-fill-color: var(--ink);
+    border: 1px solid #9db2bf;
+}
+
+[data-testid="stSidebar"] .stTextInput input::placeholder,
+[data-testid="stSidebar"] .stTextArea textarea::placeholder {
+    color: #6f8090 !important;
+    -webkit-text-fill-color: #6f8090 !important;
+    opacity: 1 !important;
 }
 
 .stTextInput input:focus,
@@ -82,51 +140,151 @@ p, li, label, span {
 .stButton > button,
 div[data-testid="stFormSubmitButton"] button {
     background: var(--teal);
-    color: #fffaf1;
-    border: 1px solid #0b5f58;
-    border-radius: 8px;
+    color: #ffffff;
+    border: 1px solid var(--teal);
+    border-radius: 10px;
     font-weight: 750;
-    min-height: 2.65rem;
+    min-height: 2.9rem;
     white-space: normal;
     line-height: 1.2;
 }
 
 .stButton > button:hover,
 div[data-testid="stFormSubmitButton"] button:hover {
-    background: #0b5f58;
-    color: #fffaf1;
-    border-color: #083f3b;
+    background: var(--ink);
+    color: #ffffff;
+    border-color: var(--ink);
 }
 
 .stButton > button:disabled {
-    background: #d8d0c3;
-    color: #786f65;
-    border-color: #c9beb0;
+    background: var(--line);
+    color: var(--muted);
+    border-color: var(--line-strong);
+}
+
+button[data-testid="stBaseButton-secondary"] {
+    background: #ffffff;
+    color: var(--ink);
+    border-color: var(--line-strong);
+    min-height: 3.1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+button[data-testid="stBaseButton-secondary"] *,
+button[data-testid="stBaseButton-secondary"] p,
+button[data-testid="stBaseButton-secondary"] span {
+    color: var(--ink) !important;
+}
+
+button[data-testid="stBaseButton-secondary"]:hover {
+    background: var(--line);
+    color: var(--ink);
+    border-color: var(--muted);
+}
+
+button[data-testid="stBaseButton-primary"] {
+    background: var(--ink);
+    color: #ffffff;
+    border-color: var(--ink);
+    min-height: 3.1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+button[data-testid="stBaseButton-primary"] *,
+button[data-testid="stBaseButton-primary"] p,
+button[data-testid="stBaseButton-primary"] span {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+button[data-testid="stBaseButton-secondary"] p,
+button[data-testid="stBaseButton-primary"] p {
+    margin: 0;
+    white-space: nowrap;
+    color: inherit !important;
+}
+
+button[data-testid*="stBaseButton"][data-testid*="primary"],
+.stButton button[kind="primary"],
+div[data-testid="stFormSubmitButton"] button[kind="primary"] {
+    background: var(--ink) !important;
+    color: #ffffff !important;
+    border-color: var(--ink) !important;
+}
+
+button[data-testid*="stBaseButton"][data-testid*="primary"] *,
+.stButton button[kind="primary"] *,
+div[data-testid="stFormSubmitButton"] button[kind="primary"] * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+[data-testid="stFileUploader"] section {
+    background: #ffffff;
+    border: 1px solid #9db2bf;
+    border-radius: 12px;
+    padding: 0.8rem;
+}
+
+[data-testid="stFileUploader"] section,
+[data-testid="stFileUploader"] section * {
+    color: var(--ink) !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
+[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] * {
+    color: var(--ink) !important;
+    -webkit-text-fill-color: var(--ink) !important;
+}
+
+[data-testid="stFileUploader"] button {
+    background: #ffffff;
+    color: var(--ink) !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+}
+
+[data-testid="stFileUploader"] button:hover {
+    background: var(--line);
+    color: var(--ink) !important;
+    border-color: var(--muted);
+}
+
+[data-testid="stFileUploader"] svg {
+    color: var(--ink) !important;
+    stroke: var(--ink) !important;
 }
 
 .presentation-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 220px;
-    gap: 1.25rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
     align-items: center;
-    background: linear-gradient(135deg, #16202a 0%, #2f4750 52%, #8a4b2e 100%);
-    border: 1px solid #314350;
-    border-radius: 8px;
-    padding: 1.35rem 1.45rem;
-    margin: 0.35rem 0 1.1rem 0;
-    box-shadow: 0 18px 38px rgba(37, 42, 48, 0.18);
+    background: var(--ink);
+    border: 1px solid #526d82;
+    border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+    margin: 0.15rem 0 0.9rem 0;
+    box-shadow: 0 14px 28px rgba(39, 55, 77, 0.2);
 }
 
-.presentation-hero h1 {
-    margin: 0 0 0.45rem 0;
-    color: #fffaf1;
-    font-size: 2.25rem;
+.presentation-hero h1,
+.hero-title-main {
+    margin: 0 0 0.35rem 0;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 900;
     line-height: 1.08;
 }
 
 .presentation-hero p {
     margin: 0;
-    color: #f4dfc8;
+    color: #dde6ed;
     font-size: 1.02rem;
     line-height: 1.55;
     max-width: 760px;
@@ -144,32 +302,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .presentation-hero .hero-kicker {
-    color: #ffd7b0;
-}
-
-.hero-panel {
-    background: rgba(255, 250, 241, 0.12);
-    border: 1px solid rgba(255, 250, 241, 0.32);
-    border-radius: 8px;
-    padding: 1rem;
-    min-height: 138px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.hero-panel-number {
-    color: #fffaf1;
-    font-size: 3.1rem;
-    font-weight: 900;
-    line-height: 1;
-}
-
-.hero-panel-text {
-    color: #f4dfc8;
-    font-weight: 700;
-    line-height: 1.25;
-    margin-top: 0.3rem;
+    color: #dde6ed;
 }
 
 .story-shell {
@@ -179,9 +312,9 @@ div[data-testid="stFormSubmitButton"] button:hover {
     gap: 1rem;
     background: var(--surface-strong);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 0.9rem 1rem;
-    box-shadow: 0 10px 24px rgba(37, 42, 48, 0.08);
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+    box-shadow: 0 10px 24px rgba(39, 55, 77, 0.1);
 }
 
 .story-title {
@@ -197,16 +330,16 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .progress-track {
-    height: 0.55rem;
-    background: #e4dccf;
+    height: 0.42rem;
+    background: #cbd8e0;
     border-radius: 999px;
     overflow: hidden;
-    margin: 0.75rem 0 0.75rem 0;
+    margin: 0.65rem 0 0.65rem 0;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--teal), var(--blue), var(--coral));
+    background: var(--muted);
     border-radius: 999px;
 }
 
@@ -218,9 +351,9 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .stepper-item {
-    background: #eee6d9;
-    border: 1px solid #d7cbbb;
-    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
     padding: 0.48rem 0.55rem;
     min-height: 3.25rem;
     display: flex;
@@ -231,20 +364,20 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 .stepper-item.done {
     background: var(--teal-soft);
-    border-color: #9bd4cb;
+    border-color: var(--line-strong);
 }
 
 .stepper-item.active {
     background: var(--ink);
     border-color: var(--ink);
-    color: #fffaf1;
+    color: #ffffff;
 }
 
 .stepper-number {
     width: 1.45rem;
     height: 1.45rem;
     border-radius: 999px;
-    background: #fffaf1;
+    background: #ffffff;
     color: var(--ink);
     display: inline-flex;
     align-items: center;
@@ -268,15 +401,15 @@ div[data-testid="stFormSubmitButton"] button:hover {
 .takeaway-card,
 .top-result-card,
 .final-result {
-    border-radius: 8px;
-    box-shadow: 0 10px 24px rgba(37, 42, 48, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(39, 55, 77, 0.08);
 }
 
 .choice-card {
     background: var(--surface-strong);
     border: 1px solid var(--line);
-    padding: 1.05rem;
-    min-height: 220px;
+    padding: 0.95rem;
+    min-height: 0;
     margin: 0.35rem 0 0.65rem 0;
 }
 
@@ -287,8 +420,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 .choice-card p {
     color: var(--muted);
-    line-height: 1.5;
-    min-height: 4.6rem;
+    line-height: 1.45;
+    min-height: 0;
 }
 
 .choice-label {
@@ -302,8 +435,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
     display: inline-flex;
     align-items: center;
     background: var(--amber-soft);
-    color: #7c4a03;
-    border: 1px solid #e3c566;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
     padding: 0.35rem 0.7rem;
     font-weight: 800;
@@ -317,16 +450,26 @@ div[data-testid="stFormSubmitButton"] button:hover {
     border-top: 5px solid var(--blue);
 }
 
+.selected-choice {
+    border-color: #526d82;
+    box-shadow: 0 12px 28px rgba(39, 55, 77, 0.16);
+    background: #f8fbfd;
+}
+
+.selected-choice .choice-label {
+    color: var(--ink);
+}
+
 .method-hero {
-    background: linear-gradient(135deg, #fffaf1 0%, #e8f3f1 52%, #fff0df 100%);
+    background: var(--surface-strong);
     border: 1px solid var(--line);
-    padding: 1.15rem 1.2rem;
+    padding: 0.95rem 1rem;
     margin-bottom: 1rem;
 }
 
 .method-hero h1 {
     margin: 0 0 0.35rem 0;
-    font-size: 2rem;
+    font-size: 1.75rem;
 }
 
 .method-hero p {
@@ -338,7 +481,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 .method-formula {
     display: inline-flex;
     background: var(--ink);
-    color: #fffaf1;
+    color: #ffffff;
     border-radius: 999px;
     padding: 0.42rem 0.75rem;
     font-weight: 800;
@@ -372,7 +515,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .info-box {
-    background: #fffdf8;
+    background: var(--surface-strong);
     border: 1px solid var(--line);
     border-left: 5px solid var(--teal);
     border-radius: 8px;
@@ -404,7 +547,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
     width: 1.8rem;
     height: 1.8rem;
     background: var(--teal);
-    color: #fffaf1;
+    color: #ffffff;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
@@ -449,8 +592,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 .doc-topic {
     background: var(--blue-soft);
-    color: #1d4ed8;
-    border: 1px solid #aac3fb;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
     padding: 0.25rem 0.55rem;
     font-size: 0.78rem;
@@ -464,7 +607,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .preview-shell {
-    background: #fffdf8;
+    background: var(--surface-strong);
     border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
@@ -475,9 +618,9 @@ div[data-testid="stFormSubmitButton"] button:hover {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background: #f1eadf;
+    background: var(--line);
     border-bottom: 1px solid var(--line);
-    color: #766b5f;
+    color: var(--muted);
     font-size: 0.76rem;
     font-weight: 800;
     padding: 0.35rem 0.55rem;
@@ -515,7 +658,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .doc-meta {
-    color: #867a6d;
+    color: var(--muted);
     font-size: 0.82rem;
 }
 
@@ -536,8 +679,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .pill {
-    background: #eef8f6;
-    border: 1px solid #a6d8cf;
+    background: #eef3f7;
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
     color: var(--teal);
     padding: 0.25rem 0.55rem;
@@ -553,8 +696,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .top-result-card {
-    background: linear-gradient(135deg, #fffaf1 0%, #e3f5f1 100%);
-    border: 1px solid #9bd4cb;
+    background: var(--surface-strong);
+    border: 1px solid var(--line-strong);
     padding: 1rem 1.1rem;
     margin: 0.75rem 0 1rem 0;
 }
@@ -608,7 +751,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 .score-bar {
     width: 100%;
     height: 0.72rem;
-    background: #e5ded2;
+    background: var(--line);
     border-radius: 999px;
     overflow: hidden;
     margin-bottom: 0.45rem;
@@ -616,7 +759,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 .score-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--teal), var(--blue));
+    background: var(--teal);
     border-radius: 999px;
 }
 
@@ -627,8 +770,8 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 .query-chip {
     background: var(--coral-soft);
-    color: #9a3412;
-    border: 1px solid #fdba74;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
     padding: 0.28rem 0.6rem;
     font-size: 0.82rem;
@@ -636,20 +779,20 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .closing-band {
-    background: linear-gradient(135deg, #16202a 0%, #29444b 56%, #7a3d2a 100%);
-    border-radius: 8px;
+    background: var(--ink);
+    border-radius: 12px;
     padding: 1.25rem 1.35rem;
     margin: 0.7rem 0 1rem 0;
 }
 
 .closing-band h2 {
-    color: #fffaf1;
+    color: #ffffff;
     margin: 0 0 0.45rem 0;
     font-size: 1.55rem;
 }
 
 .closing-band p {
-    color: #f3dfc8;
+    color: #dde6ed;
     margin: 0;
     line-height: 1.5;
 }
@@ -674,9 +817,9 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 .step-caption {
-    background: #eee6d9;
-    border: 1px solid #d6cbbb;
-    border-radius: 8px;
+    background: var(--surface-strong);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
     color: var(--muted);
     min-height: 2.65rem;
     display: flex;
@@ -690,9 +833,9 @@ div[data-testid="stFormSubmitButton"] button:hover {
 div[data-testid="stMetric"] {
     background: var(--surface-strong);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 0.75rem 0.85rem;
-    box-shadow: 0 9px 22px rgba(37, 42, 48, 0.08);
+    border-radius: 12px;
+    padding: 0.65rem 0.75rem;
+    box-shadow: 0 9px 22px rgba(39, 55, 77, 0.08);
 }
 
 div[data-testid="stMetric"] label,
@@ -707,14 +850,20 @@ div[data-testid="stMetricValue"] {
 div[data-testid="stDataFrame"] {
     background: var(--surface-strong);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: 0 9px 22px rgba(37, 42, 48, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 9px 22px rgba(39, 55, 77, 0.08);
 }
 
 div[data-testid="stAlert"] {
-    background: #fff8e1;
+    background: var(--surface-strong);
     color: var(--ink);
-    border: 1px solid #e7cf80;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+}
+
+div[data-testid="stAlert"],
+div[data-testid="stAlert"] * {
+    color: var(--ink) !important;
 }
 
 [data-testid="stMarkdownContainer"] a {

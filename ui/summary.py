@@ -124,5 +124,3 @@ def mostrar_cierre(
             """,
             unsafe_allow_html=True,
         )
-    else:
-        st.info("La pantalla de busqueda todavia no tiene una consulta guardada.")

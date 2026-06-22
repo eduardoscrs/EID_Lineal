@@ -11,16 +11,6 @@ def mostrar_marco_recorrido(
 ) -> None:
     """Muestra el encabezado fijo del recorrido tipo presentacion."""
     progreso = (paso_actual / (len(pasos) - 1)) * 100 if len(pasos) > 1 else 0
-    etiquetas = []
-
-    for indice, paso in enumerate(pasos):
-        estado = "done" if indice < paso_actual else "active" if indice == paso_actual else ""
-        etiquetas.append(
-            f'<div class="stepper-item {estado}">'
-            f'<span class="stepper-number">{indice + 1}</span>'
-            f'<span class="stepper-label">{escapar(paso)}</span>'
-            "</div>"
-        )
 
     st.markdown(
         f"""
@@ -32,10 +22,22 @@ def mostrar_marco_recorrido(
             <div class="story-progress-label">{progreso:.0f}%</div>
         </div>
         <div class="progress-track"><div class="progress-fill" style="width: {progreso:.1f}%"></div></div>
-        <div class="stepper-row">{''.join(etiquetas)}</div>
         """,
         unsafe_allow_html=True,
     )
+    columnas = st.columns(len(pasos))
+    for indice, paso in enumerate(pasos):
+        tipo_boton = "primary" if indice == paso_actual else "secondary"
+        with columnas[indice]:
+            if st.button(
+                f"{indice + 1}. {paso}",
+                key=f"paso_presentacion_{indice}",
+                use_container_width=True,
+                type=tipo_boton,
+            ):
+                st.session_state.paso_actual = indice
+                st.session_state.subir_vista = True
+                st.rerun()
 
 
 def mostrar_portada(
@@ -48,16 +50,12 @@ def mostrar_portada(
         <section class="presentation-hero">
             <div class="hero-copy">
                 <div class="hero-kicker">Algebra lineal aplicada a texto</div>
-                <h1>Buscador vectorial de documentos</h1>
+                <div class="hero-title-main">Buscador vectorial de documentos</div>
                 <p>
                     Una presentacion interactiva para mostrar como un texto se transforma en
                     un vector, como nace la matriz documento-termino y como se calcula la
                     similitud coseno.
                 </p>
-            </div>
-            <div class="hero-panel">
-                <div class="hero-panel-number">2</div>
-                <div class="hero-panel-text">metodos para comparar el mismo corpus</div>
             </div>
         </section>
         """,
@@ -77,47 +75,41 @@ def mostrar_portada(
 
     eleccion = None
     columna_tfidf, columna_count = st.columns(2)
+    tfidf_activo = tipo_vectorizador == "TF-IDF"
+    count_activo = tipo_vectorizador == "CountVectorizer"
+    clase_tfidf = "choice-card tfidf-card selected-choice" if tfidf_activo else "choice-card tfidf-card"
+    clase_count = "choice-card count-card selected-choice" if count_activo else "choice-card count-card"
 
     with columna_tfidf:
         st.markdown(
-            """
-            <div class="choice-card tfidf-card">
+            f"""
+            <div class="{clase_tfidf}">
                 <div class="choice-label">Opcion A</div>
                 <h3>TF-IDF</h3>
-                <p>TF-IDF significa Term Frequency - Inverse Document Frequency. Es una técnica que no solo cuenta cuántas veces aparece una palabra, sino que también analiza qué tan importante o distintiva es dentro del conjunto de documentos.
-
-La idea es que una palabra será más importante si aparece mucho en un documento, pero no aparece en todos los demás documentos.
-
-Por ejemplo, palabras muy comunes como “el”, “la”, “de” o “y” pueden aparecer muchas veces, pero no ayudan mucho a diferenciar un documento de otro. En cambio, palabras como “inteligencia artificial”, “ciberseguridad” o “Python” pueden ser más útiles porque representan mejor el tema del documento.
-
-TF-IDF baja el peso de las palabras demasiado comunes y aumenta el peso de las palabras más representativas o específicas.</p>
+                <p>Da mas peso a las palabras que aparecen en un documento, pero no en todos. Es util para destacar terminos distintivos dentro del corpus.</p>
                 <div class="choice-formula">frecuencia x rareza</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Elegir TF-IDF", use_container_width=True, type="primary"):
+        tipo_boton_tfidf = "primary" if tfidf_activo or tipo_vectorizador is None else "secondary"
+        if st.button("Elegir TF-IDF", use_container_width=True, type=tipo_boton_tfidf):
             eleccion = "TF-IDF"
 
     with columna_count:
         st.markdown(
-            """
-            <div class="choice-card count-card">
+            f"""
+            <div class="{clase_count}">
                 <div class="choice-label">Opcion B</div>
                 <h3>CountVectorizer</h3>
-                <p>convierte cada documento en un vector contando cuántas veces aparece cada palabra del vocabulario.
-
-En esta representación, cada fila corresponde a un documento y cada columna corresponde a una palabra. El valor de cada celda indica la cantidad de veces que esa palabra aparece en ese documento.
-
-Por ejemplo, si la palabra “Python” aparece 3 veces en un documento, en la matriz aparecerá el valor 3 para esa palabra.
-
-Este método es útil para explicar la matriz documento-término de forma directa, porque los valores representan frecuencias reales de palabras. Sin embargo, tiene una limitación: puede darle mucha importancia a palabras que aparecen muchas veces, aunque no sean tan relevantes para entender el contenido del texto.</p>
+                <p>Cuenta cuantas veces aparece cada palabra. Es la forma mas directa para mostrar la matriz documento-termino y leer frecuencias reales.</p>
                 <div class="choice-formula">numero de apariciones</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Elegir CountVectorizer", use_container_width=True):
+        tipo_boton_count = "primary" if count_activo else "secondary"
+        if st.button("Elegir CountVectorizer", use_container_width=True, type=tipo_boton_count):
             eleccion = "CountVectorizer"
 
     return eleccion

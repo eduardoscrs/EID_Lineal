@@ -23,14 +23,14 @@ from ui.styles import configurar_pagina
 
 
 PASOS_PRESENTACION = [
-    "Elegir metodo",
-    "Entender el metodo",
-    "Revisar documentos",
-    "Construir matriz",
-    "Probar busqueda",
-    "Leer graficos",
-    "Analizar evidencia",
-    "Cerrar idea",
+    "Metodo",
+    "Teoria",
+    "Docs",
+    "Matriz",
+    "Buscar",
+    "Graficos",
+    "Analisis",
+    "Cierre",
 ]
 
 
@@ -72,10 +72,37 @@ def normalizar_paso() -> None:
     st.session_state.paso_actual = max(0, min(st.session_state.paso_actual, paso_maximo))
 
 
+def mover_vista_arriba() -> None:
+    if not st.session_state.pop("subir_vista", False):
+        return
+    st.html(
+        """
+        <script>
+        const doc = window.parent.document;
+        const targets = [
+            window.parent,
+            doc.documentElement,
+            doc.body,
+            doc.querySelector('[data-testid="stAppViewContainer"]'),
+            doc.querySelector('[data-testid="stMain"]'),
+            doc.querySelector('section.main')
+        ].filter(Boolean);
+        targets.forEach((target) => {
+            if (target.scrollTo) {
+                target.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            }
+        });
+        </script>
+        """,
+        unsafe_allow_javascript=True,
+    )
+
+
 def aplicar_eleccion_vectorizador(tipo_vectorizador: str) -> None:
     """Guarda el metodo elegido y avanza a la pantalla explicativa."""
     st.session_state.tipo_vectorizador = tipo_vectorizador
     st.session_state.paso_actual = 1
+    st.session_state.subir_vista = True
     st.rerun()
 
 
@@ -105,6 +132,7 @@ def mostrar_controles_recorrido() -> None:
     with col_anterior:
         if st.button("Anterior", use_container_width=True, disabled=paso_actual == 0):
             st.session_state.paso_actual = max(0, paso_actual - 1)
+            st.session_state.subir_vista = True
             st.rerun()
 
     with col_estado:
@@ -121,6 +149,7 @@ def mostrar_controles_recorrido() -> None:
     with col_siguiente:
         if st.button("Siguiente", use_container_width=True, disabled=not puede_avanzar):
             st.session_state.paso_actual = min(ultimo_paso, paso_actual + 1)
+            st.session_state.subir_vista = True
             st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -130,6 +159,7 @@ def main() -> None:
     configurar_pagina()
     inicializar_estado()
     normalizar_paso()
+    mover_vista_arriba()
 
     eliminar_stop_words = mostrar_sidebar(PASOS_PRESENTACION)
     documentos = construir_documentos()
