@@ -63,12 +63,12 @@ def crear_grafico_barras_similitud(resultados: pd.DataFrame):
 
     fig, ax = plt.subplots(figsize=(10, 4.8))
 
-    # Ordena los documentos por similitud
+    # Ordena de menor a mayor para que el mayor puntaje quede arriba en la barra horizontal.
     datos = resultados.sort_values("Similitud coseno", ascending=True)
 
     maximo = datos["Similitud coseno"].max()
 
-    # Destaca el documento más similar
+    # El mayor valor de similitud coseno es el documento mas cercano a la consulta.
     colores = [
         COLOR_CELESTE if valor < maximo else COLOR_VERDE
         for valor in datos["Similitud coseno"]
@@ -106,7 +106,8 @@ def crear_grafico_barras_similitud(resultados: pd.DataFrame):
 def crear_mapa_calor_documentos(matriz_documento_termino, etiquetas: list[str]):
     """Genera un mapa de calor de similitud entre documentos."""
 
-    # Calcula similitud coseno entre todos los documentos
+    # Multiplica conceptualmente cada vector-documento contra los demas usando
+    # coseno; el resultado es una matriz cuadrada documento x documento.
     similitud_documentos = cosine_similarity(matriz_documento_termino)
 
     fig, ax = plt.subplots(figsize=(9.5, 7))
@@ -140,7 +141,7 @@ def crear_mapa_calor_documentos(matriz_documento_termino, etiquetas: list[str]):
 def crear_grafico_terminos(matriz_df: pd.DataFrame, tipo_vectorizador: str):
     """Genera un gráfico con los términos más importantes."""
 
-    # Obtiene los 12 términos con mayor peso o frecuencia
+    # Suma cada columna de la matriz: ranking global de terminos por peso o frecuencia.
     puntajes = matriz_df.sum(axis=0).sort_values(ascending=False).head(12)
 
     etiqueta_eje = (
@@ -172,7 +173,7 @@ def crear_grafico_terminos(matriz_df: pd.DataFrame, tipo_vectorizador: str):
 def crear_mapa_calor_matriz(matriz_df: pd.DataFrame, tipo_vectorizador: str):
     """Genera un mapa de calor de la matriz documento-término."""
 
-    # Selecciona los términos más relevantes
+    # Reduce la matriz a las columnas con mayor peso total para que el mapa sea legible.
     terminos_principales = (
         matriz_df.sum(axis=0)
         .sort_values(ascending=False)

@@ -91,6 +91,8 @@ def mostrar_matriz(
     altura_tablas_documentos = calcular_altura_tabla_matriz(matriz_df.shape[0])
     with col1:
         st.subheader("Dimensiones")
+        # Densidad = celdas con peso distinto de cero / total de celdas.
+        # Sirve para explicar que la matriz textual suele ser dispersa.
         valores_no_cero = int((matriz_df.to_numpy() != 0).sum())
         total_valores = matriz_df.shape[0] * matriz_df.shape[1]
         densidad = valores_no_cero / total_valores if total_valores else 0
@@ -120,6 +122,8 @@ def mostrar_matriz(
         )
 
     st.subheader("Tabla de la matriz")
+    # Solo cambia el orden visual de las columnas; los valores de la matriz
+    # ya fueron calculados en logic/vector_model.py.
     columnas_matriz = [termino for termino in vocabulario_mostrar if termino in matriz_df.columns]
     st.dataframe(
         estilizar_tabla_oscura(matriz_df.loc[:, columnas_matriz].round(3)),

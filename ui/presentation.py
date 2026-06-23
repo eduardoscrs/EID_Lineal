@@ -124,6 +124,8 @@ def mostrar_metodo_vectorial(
 ) -> None:
     """Explica el metodo elegido como segunda pantalla del recorrido."""
     perfil = obtener_perfil_vectorizador(tipo_vectorizador)
+    # Estos numeros resumen la matriz construida: dimension, celdas activas
+    # y densidad para explicar cuan dispersa queda la representacion.
     valores_no_cero = matriz_documento_termino.count_nonzero()
     total_valores = matriz_documento_termino.shape[0] * matriz_documento_termino.shape[1]
     densidad = valores_no_cero / total_valores if total_valores else 0

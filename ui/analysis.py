@@ -83,6 +83,7 @@ def calcular_evidencia_consultas(
     """Calcula una tabla de resultados para varias consultas."""
     filas = []
     for consulta in consultas:
+        # Repite el mismo calculo de similitud para cada consulta de prueba.
         _, similitudes = calcular_similitud_consulta(
             vectorizador=vectorizador,
             consulta=consulta,
@@ -93,6 +94,8 @@ def calcular_evidencia_consultas(
         segundo = resultados_consulta.iloc[1] if len(resultados_consulta) > 1 else None
         similitud_mejor = float(mejor["Similitud coseno"])
         similitud_segundo = float(segundo["Similitud coseno"]) if segundo is not None else 0.0
+        # Margen = diferencia entre el primer y segundo resultado. Mientras
+        # mas alto, menos ambigua fue la recuperacion.
         margen = similitud_mejor - similitud_segundo
 
         filas.append(
@@ -143,6 +146,7 @@ def mostrar_analisis_evidencia(
         matriz_documento_termino=matriz_documento_termino,
         consultas=consultas,
     )
+    # Proporcion de celdas no cero en la matriz documento-termino.
     densidad = (matriz_df.to_numpy() != 0).sum() / matriz_df.size if matriz_df.size else 0
     promedio_similitud = float(evidencia_df["Similitud"].mean())
     sin_coincidencia = int((evidencia_df["Similitud"] == 0).sum())
@@ -233,6 +237,7 @@ def mostrar_analisis_evidencia(
     )
 
     st.subheader("Terminos principales del corpus")
+    # Suma por columnas: mide el peso total de cada termino en todo el corpus.
     terminos_df = (
         matriz_df.sum(axis=0)
         .sort_values(ascending=False)

@@ -58,16 +58,22 @@ def mostrar_buscador(
         )
         return None
 
+    # La consulta entra al mismo espacio vectorial de la matriz:
+    # mismas columnas, mismo peso TF-IDF o mismo conteo.
     vector_consulta, similitudes = calcular_similitud_consulta(
         vectorizador=vectorizador,
         consulta=consulta,
         matriz_documento_termino=matriz_documento_termino,
     )
+    # Fila unica que permite revisar que terminos de la consulta quedaron
+    # activos dentro del vocabulario aprendido.
     vector_consulta_df = pd.DataFrame(
         vector_consulta.toarray(),
         index=["Consulta"],
         columns=vocabulario,
     )
+    # Cada similitud ya corresponde a un documento; preparar_resultados las
+    # ordena para convertir el calculo en ranking.
     resultados = preparar_resultados(documentos, similitudes)
 
     if np.count_nonzero(vector_consulta.toarray()) == 0:
@@ -107,6 +113,8 @@ def mostrar_buscador(
 
     st.subheader("Vector de la consulta")
     valores_consulta = vector_consulta_df.loc["Consulta"]
+    # Se muestran solo pesos positivos porque los ceros significan que el
+    # termino no participa en la comparacion coseno.
     terminos_consulta = valores_consulta[valores_consulta > 0].sort_values(ascending=False)
     if not terminos_consulta.empty:
         terminos_consulta = terminos_consulta.loc[

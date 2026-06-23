@@ -184,11 +184,15 @@ def main() -> None:
         mostrar_controles_recorrido()
         return
 
+    # Punto central del flujo: aqui se aprende el vocabulario y se construye
+    # la matriz documento-termino que alimenta busqueda, tablas y graficos.
     vectorizador, matriz_documento_termino, vocabulario = generar_modelo_vectorial(
         documentos=documentos,
         tipo_vectorizador=tipo_vectorizador,
         eliminar_stop_words=eliminar_stop_words,
     )
+    # Esta version en DataFrame mantiene los mismos valores de la matriz,
+    # pero con nombres de documentos y columnas para poder estudiarla.
     matriz_df = matriz_a_dataframe(
         matriz=matriz_documento_termino,
         vocabulario=vocabulario,
